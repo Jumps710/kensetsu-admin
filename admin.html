@@ -131,8 +131,9 @@
                 return columns.map(col => col.innerText).join(',');
             }).join('\n');
 
-            // CSVファイルを生成してダウンロード
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            // BOM付きUTF-8にして文字化けを防ぐ
+            const bom = '\uFEFF';  // BOM（Byte Order Mark）
+            const blob = new Blob([bom + csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.setAttribute('href', url);
