@@ -4,13 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Console</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
     <h1>管理コンソール - DynamoDB レコード</h1>
-    <button onclick="fetchRecords()">レコードを取得</button>
+    
+    <!-- エクスポートボタン -->
+    <button onclick="exportToCSV()">エクスポート</button>
 
     <!-- データを表示するためのテーブル -->
-    <table id="recordsTable" border="1">
+    <table id="recordsTable">
         <thead>
             <tr>
                 <th>ID</th>
@@ -27,6 +77,11 @@
 
     <script>
         const apiEndpoint = 'https://00in1sa3eg.execute-api.ap-northeast-1.amazonaws.com/kensetsu/admin';
+
+        // ページがロードされたときに全レコードを自動的に取得して表示
+        window.onload = function () {
+            fetchRecords();
+        };
 
         // データを取得する関数
         async function fetchRecords() {
@@ -66,6 +121,26 @@
                 `;
                 tableBody.appendChild(row);
             });
+        }
+
+        // CSV形式でエクスポートする関数
+        function exportToCSV() {
+            const rows = Array.from(document.querySelectorAll('#recordsTable tr'));
+            const csvContent = rows.map(row => {
+                const columns = Array.from(row.querySelectorAll('td, th'));
+                return columns.map(col => col.innerText).join(',');
+            }).join('\n');
+
+            // CSVファイルを生成してダウンロード
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'dynamodb_records.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
