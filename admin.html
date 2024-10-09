@@ -63,13 +63,13 @@
     <table id="recordsTable">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>作成日時</th>
                 <th>会社名</th>
                 <th>姓</th>
                 <th>名</th>
                 <th>電話番号</th>
+                <th>ID</th>
                 <th>サイトID</th>
-                <th>作成日時</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -111,13 +111,14 @@
                 
                 // 各レコードのデータをテーブルに追加
                 row.innerHTML = `
-                    <td>${record.id}</td>
+                    <td>${record.createdAt}</td>
                     <td>${record.companyName}</td>
                     <td>${record.sei}</td>
                     <td>${record.mei}</td>
                     <td>${record.phone}</td>
+                    <td>${record.id}</td>
                     <td>${record.siteId}</td>
-                    <td>${record.createdAt}</td>
+
                 `;
                 tableBody.appendChild(row);
             });
